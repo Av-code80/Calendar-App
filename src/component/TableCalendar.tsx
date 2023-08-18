@@ -1,7 +1,18 @@
-/* eslint-disable react/prop-types */
+import React from "react";
 import { format, startOfWeek, addDays } from "date-fns";
 
-const TableCalendar = ({
+interface Events {
+  [day: string]: string;
+}
+
+interface TableCalendarProps {
+  firstDayOfMonth: Date;
+  monthEnd: Date;
+  events: Events;
+  handleDayClick: (day: string) => void;
+}
+
+const TableCalendar: React.FC<TableCalendarProps> = ({
   firstDayOfMonth,
   monthEnd,
   events,
@@ -10,13 +21,12 @@ const TableCalendar = ({
   const startDate = startOfWeek(firstDayOfMonth);
   const endDate = addDays(monthEnd, 1);
 
-  const tableRows = [];
-  let rowDays = [];
+  const tableRows: React.ReactNode[] = [];
+  let rowDays: React.ReactNode[] = [];
   let day = startDate;
 
   while (day < endDate) {
-    // eslint-disable-next-line no-unused-vars
-    const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const weekDays: React.ReactNode[] = Array.from({ length: 7 }, (_, i) => {
       const formattedDay = format(day, "d");
       const isCurrentMonth = day >= firstDayOfMonth && day <= monthEnd;
       const eventExists = !!events[formattedDay];
@@ -34,7 +44,7 @@ const TableCalendar = ({
             cursor: isDisabled ? "not-allowed" : "pointer",
             backgroundColor: isDisabled ? "#f5f5f5" : "",
             color: isDisabled ? "#aaa" : "",
-            display: isDisabled && "none",
+            display: isDisabled ? "none" : "",
           }}
         >
           {formattedDay}
@@ -47,7 +57,7 @@ const TableCalendar = ({
     });
 
     rowDays = [...rowDays, ...weekDays];
-    tableRows.push(<tr key={day}>{weekDays}</tr>);
+    tableRows.push(<tr key={day.toISOString()}>{weekDays}</tr>);
   }
 
   return (

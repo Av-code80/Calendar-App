@@ -1,15 +1,19 @@
-import { useState } from "react";
-import { colors } from "./ColorEvent";
-import "./Calendar.css";
+import React, { useState } from "react";
+import { colors, Color } from "./ColorEvent";
+import "./Calendar.scss";
 import TableCalendar from "./TableCalendar";
 
-const Calendar = () => {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [events, setEvents] = useState({});
-  const [eventName, setEventName] = useState("");
-  const [eventColor, setEventColor] = useState("#FF5252");
+interface Events {
+  [day: string]: string;
+}
 
-  const handleDayClick = (day) => {
+const Calendar: React.FC = () => {
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [events, setEvents] = useState<Events>({});
+  const [eventName, setEventName] = useState<string>("");
+  const [eventColor, setEventColor] = useState<string>("#FF5252");
+
+  const handleDayClick = (day: string) => {
     const selectedDayInt = parseInt(day, 10);
     if (selectedDayInt > 31) {
       return;
@@ -19,23 +23,25 @@ const Calendar = () => {
     setEventName(events[day] || "");
   };
 
-  const handleEventSubmit = (e) => {
+  const handleEventSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (eventName.trim() === "") {
       return;
     }
-    setEvents((prevEvents) => ({ ...prevEvents, [selectedDay]: eventName }));
+    setEvents((prevEvents) => ({ ...prevEvents, [selectedDay!]: eventName }));
     setSelectedDay(null);
     setEventName("");
   };
 
   const handleEventDelete = () => {
-    setEvents((prevEvents) => {
-      const updatedEvents = { ...prevEvents };
-      delete updatedEvents[selectedDay];
-      return updatedEvents;
-    });
-    setSelectedDay(null);
+    if (selectedDay) {
+      setEvents((prevEvents) => {
+        const updatedEvents = { ...prevEvents };
+        delete updatedEvents[selectedDay];
+        return updatedEvents;
+      });
+      setSelectedDay(null);
+    }
   };
 
   return (
@@ -72,7 +78,7 @@ const Calendar = () => {
                 value={eventColor}
                 onChange={(e) => setEventColor(e.target.value)}
               >
-                {colors.map((color) => (
+                {colors.map((color: Color) => (
                   <option key={color.code} value={color.code}>
                     {color.name}
                   </option>
