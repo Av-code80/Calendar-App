@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { colors, Color } from "./ColorEvent";
-import "./Calendar.scss";
+import { colors, Color } from "../Data/ColorData";
 import TableCalendar from "./TableCalendar";
+import Modal from "react-modal";
+import "./Calendar.scss";
 
 interface Events {
   [day: string]: string;
@@ -12,6 +13,7 @@ const Calendar: React.FC = () => {
   const [events, setEvents] = useState<Events>({});
   const [eventName, setEventName] = useState<string>("");
   const [eventColor, setEventColor] = useState<string>("#FF5252");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleDayClick = (day: string) => {
     const selectedDayInt = parseInt(day, 10);
@@ -21,6 +23,11 @@ const Calendar: React.FC = () => {
 
     setSelectedDay(day);
     setEventName(events[day] || "");
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const handleEventSubmit = (e: React.FormEvent) => {
@@ -31,6 +38,7 @@ const Calendar: React.FC = () => {
     setEvents((prevEvents) => ({ ...prevEvents, [selectedDay!]: eventName }));
     setSelectedDay(null);
     setEventName("");
+    setIsModalOpen(false); // Close the modal after submitting
   };
 
   const handleEventDelete = () => {
@@ -41,6 +49,7 @@ const Calendar: React.FC = () => {
         return updatedEvents;
       });
       setSelectedDay(null);
+      setIsModalOpen(false); // Close the modal after deleting
     }
   };
 
@@ -53,27 +62,33 @@ const Calendar: React.FC = () => {
         handleDayClick={handleDayClick}
       />
 
-      {/* Event form */}
-      {selectedDay !== null && (
-        <div className="event-form">
-          <h3>{selectedDay}</h3>
-          {events[selectedDay] ? (
-            <div style={{ color: `${eventColor}` }}>
-              <p>Event is: {events[selectedDay]}</p>
-              <button onClick={handleEventDelete}>Delete Event</button>
-            </div>
-          ) : (
-            <form onSubmit={handleEventSubmit}>
-              <label>
-                Event Name:
-                <input
-                  type="text"
-                  value={eventName}
-                  onChange={(e) => setEventName(e.target.value)}
-                  placeholder="Enter Event name"
-                />
-              </label>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Create Event"
+        className="modal"
+        overlayClassName="overlay"
+      >
+        <h2>{selectedDay}</h2>
+        {selectedDay !== null && events[selectedDay] ? (
+          <div style={{ color: eventColor, textAlign: "center" }}>
+            <p>Your event is: {events[selectedDay]}</p>
+            <button onClick={handleEventDelete}>Delete Event</button>
+          </div>
+        ) : (
+          <form className="form" onSubmit={handleEventSubmit}>
+            <label>
+              Event Name:
+              <input
+                type="text"
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+                placeholder="Enter Event name"
+              />
+            </label>
 
+            <label>
+              Event Color:
               <select
                 value={eventColor}
                 onChange={(e) => setEventColor(e.target.value)}
@@ -84,14 +99,17 @@ const Calendar: React.FC = () => {
                   </option>
                 ))}
               </select>
+            </label>
+
+            <div className="buttons">
               <button type="submit" disabled={eventName.length < 3}>
                 Create Event
               </button>
-              <button onClick={() => setSelectedDay(null)}>Close</button>
-            </form>
-          )}
-        </div>
-      )}
+              <button onClick={closeModal}>Close</button>
+            </div>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 };
