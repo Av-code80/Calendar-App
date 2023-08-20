@@ -22,8 +22,8 @@ const EventForm: React.FC<EventFormProps> = ({
   setIsModalOpen,
 }) => (
   <form className="form" onSubmit={handleEventSubmit}>
-    <label>
-      Event Name:
+    <label className="event-name">
+      <span>Event Name</span>
       <input
         type="text"
         value={eventName}
@@ -32,12 +32,12 @@ const EventForm: React.FC<EventFormProps> = ({
       />
     </label>
 
-    <label>
-      Event Color:
+    <label className="event-name">
+      <span>Event Color</span>
       <Select value={eventColor} onChange={setEventColor} options={colors} />
     </label>
 
-    <div className="buttons">
+    <div>
       <button type="submit" disabled={eventName.length < 3}>
         Create Event
       </button>

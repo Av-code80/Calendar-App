@@ -11,6 +11,38 @@
   justify-content: space-around;
 }
 
+button {
+  border-radius: 8px;
+  border: 1px solid gray;
+  padding: 0.2em 1em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
 table {
   border-collapse: collapse;
   margin-top: 10px;
@@ -42,7 +74,7 @@ td {
 .form {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 14vh;
   text-align: center;
 }
@@ -57,12 +89,26 @@ td {
 }
 
 .event-box {
-  color: #FF5252;
-   text-align: center;
+  color: #ff5252;
+  text-align: center;
+}
+
+.event-name {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+span {
+  margin-bottom: 2px;
+  color: #837d7d;
 }
 
 h2 {
   text-align: center;
+  color: #aaa;
 }
 
 .disabled-day {
@@ -72,11 +118,11 @@ h2 {
 
 .modal {
   position: absolute;
-  top: 50%;
+  top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 5px;
   width: 300px;
   max-width: 90%;
