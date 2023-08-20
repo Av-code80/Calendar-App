@@ -1,9 +1,9 @@
 // Calendar.tsx
 import React, { useState } from "react";
-import { colors, Color } from "../Data/ColorData";
 import TableCalendar from "./table/TableCalendar";
 import EventModal from "./events/EventModal";
 import "./Calendar.scss";
+import colors from "../Data/ColorData";
 
 interface Events {
   [day: string]: string;

@@ -3,7 +3,7 @@ export interface Color {
   name: string;
 }
 
-export const colors: Color[] = [
+const colors: Color[] = [
   {
     code: "#FF5252",
     name: "red",
@@ -26,3 +26,4 @@ export const colors: Color[] = [
   },
 ];
 
+export default colors;
