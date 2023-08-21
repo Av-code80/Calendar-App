@@ -1,25 +1,16 @@
-// TableCalendar.tsx
 import React from "react";
 import { startOfWeek, addDays } from "date-fns";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 
-interface Events {
-  [day: string]: string;
-}
-
 interface TableCalendarProps {
   firstDayOfMonth: Date;
   monthEnd: Date;
-  events: Events;
-  handleDayClick: (day: string) => void;
 }
 
 const TableCalendar: React.FC<TableCalendarProps> = ({
   firstDayOfMonth,
   monthEnd,
-  events,
-  handleDayClick,
 }) => {
   const startDate = startOfWeek(firstDayOfMonth);
   const endDate = addDays(monthEnd, 1);
@@ -34,8 +25,6 @@ const TableCalendar: React.FC<TableCalendarProps> = ({
         startDate={day}
         firstDayOfMonth={firstDayOfMonth}
         monthEnd={monthEnd}
-        events={events}
-        handleDayClick={handleDayClick}
       />
     );
     day = addDays(day, 7);

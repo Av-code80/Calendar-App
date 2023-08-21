@@ -1,63 +1,31 @@
-// EventModal.tsx
 import React from "react";
 import Modal from "react-modal";
-import { Color } from "../../Data/ColorData";
 import EventForm from "./event-form/EventForm";
 import EventDisplay from "./EventDisplay";
+import { useCalendarContext } from "../../context/CalendarContext";
+import styles from "./EventModal.module.scss";
 
-interface EventModalProps {
-  isModalOpen: boolean;
-  selectedDay: string | null;
-  events: { [day: string]: string };
-  setIsModalOpen: (isOpen: boolean) => void;
-  eventName: string;
-  eventColor: string;
-  colors: Color[];
-  setEventName: (name: string) => void;
-  setEventColor: (color: string) => void;
-  handleEventSubmit: (e: React.FormEvent) => void;
-  handleEventDelete: () => void;
-}
+const EventModal: React.FC = () => {
+  const { state, actions } = useCalendarContext();
+  const { selectedDay, events, isModalOpen } = state;
+  const { setIsModalOpen } = actions;
 
-const EventModal: React.FC<EventModalProps> = ({
-  isModalOpen,
-  selectedDay,
-  events,
-  setIsModalOpen,
-  eventName,
-  eventColor,
-  colors,
-  setEventName,
-  setEventColor,
-  handleEventSubmit,
-  handleEventDelete,
-}) => (
-  <Modal
-    isOpen={isModalOpen}
-    onRequestClose={() => setIsModalOpen(false)}
-    contentLabel="Create Event"
-    className="modal"
-    overlayClassName="overlay"
-  >
-    <h2>{selectedDay}</h2>
-    {selectedDay !== null && events[selectedDay] ? (
-      <EventDisplay
-        eventColor={eventColor}
-        event={events[selectedDay]}
-        handleEventDelete={handleEventDelete}
-      />
-    ) : (
-      <EventForm
-        eventName={eventName}
-        eventColor={eventColor}
-        colors={colors}
-        setEventName={setEventName}
-        setEventColor={setEventColor}
-        handleEventSubmit={handleEventSubmit}
-        setIsModalOpen={setIsModalOpen}
-      />
-    )}
-  </Modal>
-);
+  return (
+    <Modal
+      isOpen={isModalOpen}
+      onRequestClose={() => setIsModalOpen(false)}
+      contentLabel="Create Event"
+      className={styles.modal}
+      overlayClassName={styles.overlay}
+    >
+      <h2>{selectedDay}</h2>
+      {selectedDay !== null && events[selectedDay] ? (
+        <EventDisplay />
+      ) : (
+        <EventForm />
+      )}
+    </Modal>
+  );
+};
 
 export default EventModal;

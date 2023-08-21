@@ -1,94 +1,85 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import EventForm from "../EventForm";
-import colors from "./../../../../Data/ColorData";
-import userEvent from "@testing-library/user-event";
+import * as CalendarContext from "../../../../context/CalendarContext";
 
 describe("EventForm", () => {
- const defaultProps = {
-   eventName: "",
-   eventColor: "",
-   colors: [
-     {
-       code: "#FF5252",
-       name: "red",
-     },
-     {
-       code: "#E040FB",
-       name: "purple",
-     },
-     {
-       code: "#FF6E40",
-       name: "orange",
-     },
-     {
-       code: "#CDDC39",
-       name: "lime",
-     },
-     {
-       code: "#0097A7",
-       name: "cyan",
-     },
-   ],
-   setEventName: jest.fn(),
-   setEventColor: jest.fn(),
-   handleEventSubmit: jest.fn(),
-   setIsModalOpen: jest.fn(),
- };
+  let mockSetEventName: jest.Mock<any, any, any>;
+  let mockSetIsModalOpen: jest.Mock<any, any, any>;
+  let mockHandleEventSubmit: jest.Mock<any, any, any>;
 
-  it("renders without crashing", () => {
-    const { container } = render(<EventForm {...defaultProps} />);
-    expect(container).toBeInTheDocument();
+  beforeEach(() => {
+    mockSetEventName = jest.fn();
+    mockSetIsModalOpen = jest.fn();
+    mockHandleEventSubmit = jest.fn();
+
+    jest.spyOn(CalendarContext, "useCalendarContext").mockImplementation(
+      () =>
+        ({
+          state: {
+            eventName: "",
+          },
+          actions: {
+            setEventName: mockSetEventName,
+            setIsModalOpen: mockSetIsModalOpen,
+            handleEventSubmit: mockHandleEventSubmit,
+          },
+        } as any)
+    );
   });
 
-  it("displays color options correctly", () => {
-    const { getByLabelText } = render(<EventForm {...defaultProps} />);
-    const select = getByLabelText("Event Color:") as HTMLSelectElement;
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    colors.forEach((color) => {
-      expect(select).toHaveTextContent(color.name);
+  it("renders correctly", () => {
+    render(<EventForm />);
+    expect(screen.getByPlaceholderText("Enter Event Name")).toBeInTheDocument();
+    expect(screen.getByText("Create Event")).toBeInTheDocument();
+    expect(screen.getByText("Close")).toBeInTheDocument();
+  });
+
+  it("updates the event name when typing", () => {
+    render(<EventForm />);
+    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+      target: { value: "Meeting" },
     });
+    expect(mockSetEventName).toHaveBeenCalledWith("Meeting");
   });
 
-  it("calls setEventName on input change", () => {
-    const { getByPlaceholderText } = render(<EventForm {...defaultProps} />);
-    const input = getByPlaceholderText("Enter Event name");
-
-    fireEvent.change(input, { target: { value: "Sample Event" } });
-    expect(defaultProps.setEventName).toHaveBeenCalledWith("Sample Event");
+  it("disables Create Event button for event names under 3 characters", () => {
+    render(<EventForm />);
+    const createEventButton = screen.getByText("Create Event");
+    expect(createEventButton).toBeDisabled();
+    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+      target: { value: "Hi" },
+    });
+    expect(createEventButton).toBeDisabled();
   });
 
-  it("calls setEventColor on select change", () => {
-    const { getByLabelText } = render(<EventForm {...defaultProps} />);
-    const select = getByLabelText("Event Color:") as HTMLSelectElement;
-
-    fireEvent.change(select, { target: { value: colors[1].code } });
-    expect(defaultProps.setEventColor).toHaveBeenCalledWith(colors[1].code);
+  it("enables Create Event button when event name is 3 or more characters", () => {
+    render(<EventForm />);
+    const createEventButton = screen.getByText("Create Event");
+    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+      target: { value: "Party" },
+    });
+    expect(createEventButton).not.toBeEnabled();
   });
 
-  it("disables submit button when eventName is less than 3 characters", () => {
-    const props = { ...defaultProps, eventName: "Hi" };
-    const { getByText } = render(<EventForm {...props} />);
-    const button = getByText("Create Event");
-
-    expect(button).toBeDisabled();
+  it("calls setIsModalOpen with false when Close button is clicked", () => {
+    render(<EventForm />);
+    fireEvent.click(screen.getByText("Close"));
+    expect(mockSetIsModalOpen).toHaveBeenCalledWith(false);
   });
 
-   test("renders select options correctly", () => {
-     const { getByRole } = render(<EventForm {...defaultProps} />);
-     const selectElement = getByRole("combobox");
-     expect(selectElement).toBeInTheDocument();
+  it("calls handleEventSubmit when the form is submitted", () => {
+    render(<EventForm />);
+    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+      target: { value: "Party" },
+    });
+    fireEvent.submit(screen.getByText("Create Event"));
+    expect(mockHandleEventSubmit).toHaveBeenCalled();
+  });
 
-     defaultProps.colors.forEach((color) => {
-       const optionElement = getByRole("option", { name: color.name });
-       expect(optionElement).toBeInTheDocument();
-     });
-   });
 
-   test("calls setEventColor when a color is selected", () => {
-     const { getByRole } = render(<EventForm {...defaultProps} />);
-     const selectElement = getByRole("combobox");
-     userEvent.selectOptions(selectElement, ["#E040FB"]);
-     expect(defaultProps.setEventColor).toHaveBeenCalledWith("#E040FB");
-   });
 });

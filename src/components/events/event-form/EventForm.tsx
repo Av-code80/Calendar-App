@@ -1,49 +1,45 @@
 import React from "react";
 import Select from "./Select";
-import { Color } from "../../../Data/ColorData";
+import { useCalendarContext } from "../../../context/CalendarContext";
+import styles from "./EventForm.module.scss";
 
-interface EventFormProps {
-  eventName: string;
-  eventColor: string;
-  colors: Color[];
-  setEventName: (name: string) => void;
-  setEventColor: (color: string) => void;
-  handleEventSubmit: (e: React.FormEvent) => void;
-  setIsModalOpen: (isOpen: boolean) => void;
-}
+const EventForm: React.FC = () => {
+  const { state, actions } = useCalendarContext();
+  const { eventName } = state;
+  const { setEventName, setIsModalOpen, handleEventSubmit } = actions;
+  const isBtnDisabled = eventName.length < 3;
 
-const EventForm: React.FC<EventFormProps> = ({
-  eventName,
-  eventColor,
-  colors,
-  setEventName,
-  setEventColor,
-  handleEventSubmit,
-  setIsModalOpen,
-}) => (
-  <form className="form" onSubmit={handleEventSubmit}>
-    <label className="event-name">
-      <span>Event Name</span>
-      <input
-        type="text"
-        value={eventName}
-        onChange={(e) => setEventName(e.target.value)}
-        placeholder="Enter Event name"
-      />
-    </label>
+  return (
+    <form className={styles.form} onSubmit={handleEventSubmit}>
+      <label className={styles["event-name"]}>
+        <span>Event Name</span>
+        <input
+          type="text"
+          value={eventName}
+          onChange={(e) => setEventName(e.target.value)}
+          placeholder="Enter Event Name"
+        />
+      </label>
 
-    <label className="event-name">
-      <span>Event Color</span>
-      <Select value={eventColor} onChange={setEventColor} options={colors} />
-    </label>
+      <label className={styles["event-name"]}>
+        <span>Event Color</span>
+        <Select />
+      </label>
 
-    <div>
-      <button type="submit" disabled={eventName.length < 3}>
-        Create Event
-      </button>
-      <button onClick={() => setIsModalOpen(false)}>Close</button>
-    </div>
-  </form>
-);
+      <div className={styles.buttons}>
+        <button
+          className={`${isBtnDisabled ? styles.disabled : ""}`}
+          type="submit"
+          disabled={isBtnDisabled}
+        >
+          Create Event
+        </button>
+        <button className={styles.close} onClick={() => setIsModalOpen(false)}>
+          Close
+        </button>
+      </div>
+    </form>
+  );
+};
 
 export default EventForm;

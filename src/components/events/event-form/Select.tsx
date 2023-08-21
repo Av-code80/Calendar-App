@@ -1,20 +1,21 @@
 import React from "react";
-import { Color } from "../../../Data/ColorData";
+import colors from "../../../Data/ColorData";
+import { useCalendarContext } from "../../../context/CalendarContext";
 
-interface SelectProps {
-  value: string;
-  onChange: (value: string) => void;
-  options: Color[];
-}
-
-const Select: React.FC<SelectProps> = ({ value, onChange, options }) => (
-  <select value={value} onChange={(e) => onChange(e.target.value)}>
-    {options.map((option) => (
-      <option key={option.code} value={option.code}>
-        {option.name}
-      </option>
-    ))}
-  </select>
-);
+const Select: React.FC = () => {
+  const { state, actions } = useCalendarContext();
+  const { eventColor } = state;
+  const { setEventColor } = actions;
+  
+  return (
+    <select value={eventColor} onChange={(e) => setEventColor(e.target.value)}>
+      {colors.map((option) => (
+        <option key={option.code} value={option.code}>
+          {option.name}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 export default Select;

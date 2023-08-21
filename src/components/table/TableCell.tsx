@@ -1,36 +1,29 @@
-// TableCell.tsx
 import React from "react";
+import { useCalendarContext } from "../../context/CalendarContext";
+import styles from "./TableCell.module.scss";
 
 interface TableCellProps {
   formattedDay: string;
-  isCurrentMonth: boolean;
   isDisabled: boolean;
   eventExists: boolean;
-  handleDayClick: () => void;
 }
 
 const TableCell: React.FC<TableCellProps> = ({
   formattedDay,
-  isCurrentMonth,
   isDisabled,
   eventExists,
-  handleDayClick,
-}) => (
-  <td
-    className={`calendar-day ${
-      isCurrentMonth ? "current-month" : "other-month"
-    } ${isDisabled ? "disabled-day" : ""}`}
-    onClick={handleDayClick}
-    style={{
-      cursor: isDisabled ? "not-allowed" : "pointer",
-      backgroundColor: isDisabled ? "#f5f5f5" : "",
-      color: isDisabled ? "#aaa" : "",
-      display: isDisabled ? "none" : "",
-    }}
-  >
-    {formattedDay}
-    {eventExists && <span className="event-dot" />}
-  </td>
-);
+}) => {
+  const { actions } = useCalendarContext();
+  const { handleDayClick } = actions;
+  return (
+    <td
+      className={`${styles.cell} ${isDisabled ? styles.isDisable : ""}`}
+      onClick={() => !isDisabled && handleDayClick(formattedDay)}
+    >
+      {formattedDay}
+      {eventExists && <span className={styles["event-dot"]} />}
+    </td>
+  );
+};
 
 export default TableCell;

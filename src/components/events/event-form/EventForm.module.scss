@@ -1,0 +1,44 @@
+$border: 0.5rem solid transparent;
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-block: 1rem;
+
+  .close {
+    background-color: gray;
+    color: rgb(29, 28, 28);
+    border: $border;
+
+    &:hover {
+      border-color: gray;
+    }
+  }
+
+  .disabled {
+    color: gray;
+    background-color: gainsboro;
+    border: $border;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+
+  .event-name {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 8px;
+
+    input,
+    select {
+      padding: 0.3rem 0.5rem;
+    }
+  }
+}

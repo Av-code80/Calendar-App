@@ -1,28 +1,26 @@
-// TableRow.tsx
+
 import React from "react";
 import TableCell from "./TableCell";
 import { format, addDays } from "date-fns";
+import { useCalendarContext } from "../../context/CalendarContext";
 
 interface TableRowProps {
   startDate: Date;
   firstDayOfMonth: Date;
   monthEnd: Date;
-  events: { [day: string]: string };
-  handleDayClick: (day: string) => void;
 }
 
 const TableRow: React.FC<TableRowProps> = ({
   startDate,
   firstDayOfMonth,
   monthEnd,
-  events,
-  handleDayClick,
 }) => {
+  const { state } = useCalendarContext();
+  const { events } = state;
   let day = startDate;
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const formattedDay = format(day, "d");
-    const isCurrentMonth = day >= firstDayOfMonth && day <= monthEnd;
-    const eventExists = !!events[formattedDay];
+    const eventExists = Boolean(events[formattedDay]);
     const isDisabled =
       day.getMonth() !== firstDayOfMonth.getMonth() || day > monthEnd;
 
@@ -30,10 +28,8 @@ const TableRow: React.FC<TableRowProps> = ({
       <TableCell
         key={formattedDay}
         formattedDay={formattedDay}
-        isCurrentMonth={isCurrentMonth}
         isDisabled={isDisabled}
         eventExists={eventExists}
-        handleDayClick={() => !isDisabled && handleDayClick(formattedDay)}
       />
     );
 
