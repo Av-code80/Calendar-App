@@ -10,6 +10,7 @@ const EventDisplay: React.FC = () => {
   const { name, color } = selectedDay
     ? events[selectedDay]
     : { name: "", color: "" };
+
   return (
     <div className={styles["event-box"]}>
       <p style={{ background: color }}>Your event is: {name}</p>

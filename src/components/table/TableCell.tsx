@@ -15,6 +15,7 @@ const TableCell: React.FC<TableCellProps> = ({
 }) => {
   const { actions } = useCalendarContext();
   const { handleDayClick } = actions;
+
   return (
     <td
       className={`${styles.cell} ${isDisabled ? styles.isDisable : ""}`}

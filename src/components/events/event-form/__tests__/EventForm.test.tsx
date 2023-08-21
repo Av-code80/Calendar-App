@@ -80,6 +80,4 @@ describe("EventForm", () => {
     fireEvent.submit(screen.getByText("Create Event"));
     expect(mockHandleEventSubmit).toHaveBeenCalled();
   });
-
-
 });

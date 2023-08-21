@@ -4,6 +4,7 @@ import EventModal from "./events/EventModal";
 import styles from "./Calendar.module.scss";
 
 const Calendar: React.FC = () => {
+  
   return (
     <div className={styles.calendar}>
       <TableCalendar
