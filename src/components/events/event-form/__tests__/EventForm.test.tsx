@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent as userEvent, screen } from "@testing-library/react";
 import EventForm from "../EventForm";
 import * as CalendarContext from "../../../../context/CalendarContext";
 
@@ -41,7 +41,7 @@ describe("EventForm", () => {
 
   it("updates the event name when typing", () => {
     render(<EventForm />);
-    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+    userEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
       target: { value: "Meeting" },
     });
     expect(mockSetEventName).toHaveBeenCalledWith("Meeting");
@@ -51,7 +51,7 @@ describe("EventForm", () => {
     render(<EventForm />);
     const createEventButton = screen.getByText("Create Event");
     expect(createEventButton).toBeDisabled();
-    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+    userEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
       target: { value: "Hi" },
     });
     expect(createEventButton).toBeDisabled();
@@ -60,7 +60,7 @@ describe("EventForm", () => {
   it("enables Create Event button when event name is 3 or more characters", () => {
     render(<EventForm />);
     const createEventButton = screen.getByText("Create Event");
-    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+    userEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
       target: { value: "Party" },
     });
     expect(createEventButton).not.toBeEnabled();
@@ -68,16 +68,16 @@ describe("EventForm", () => {
 
   it("calls setIsModalOpen with false when Close button is clicked", () => {
     render(<EventForm />);
-    fireEvent.click(screen.getByText("Close"));
+    userEvent.click(screen.getByText("Close"));
     expect(mockSetIsModalOpen).toHaveBeenCalledWith(false);
   });
 
   it("calls handleEventSubmit when the form is submitted", () => {
     render(<EventForm />);
-    fireEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
+    userEvent.change(screen.getByPlaceholderText("Enter Event Name"), {
       target: { value: "Party" },
     });
-    fireEvent.submit(screen.getByText("Create Event"));
+    userEvent.submit(screen.getByText("Create Event"));
     expect(mockHandleEventSubmit).toHaveBeenCalled();
   });
 });

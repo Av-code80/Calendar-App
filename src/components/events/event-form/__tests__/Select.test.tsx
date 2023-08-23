@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent as userEvent, screen } from "@testing-library/react";
 import Select from "../Select";
 import colors from "../../../../Data/ColorData";
 import * as CalendarContext from "../../../../context/CalendarContext";
@@ -46,7 +46,7 @@ describe("Select", () => {
   it("calls setEventColor with the correct color code when a new color is selected", () => {
     render(<Select />);
     const selectElement = screen.getByDisplayValue(colors[0].name); //
-    fireEvent.change(selectElement, {
+    userEvent.change(selectElement, {
       target: { value: colors[1].code },
     });
     expect(mockSetEventColor).toHaveBeenCalledWith(colors[1].code);
