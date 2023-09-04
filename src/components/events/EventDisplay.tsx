@@ -14,7 +14,9 @@ const EventDisplay: React.FC = () => {
   return (
     <div className={styles["event-box"]}>
       <p style={{ background: color }}>Your event is: {name}</p>
-      <button onClick={handleEventDelete}>Delete Event</button>
+      <button onClick={handleEventDelete}
+      aria-label={`Delete event ${name}`} //++
+      >Delete Event</button>
     </div>
   );
 };

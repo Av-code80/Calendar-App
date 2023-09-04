@@ -1,8 +1,4 @@
-# Splio Front-end Interview Test
-
-Welcome to the Splio Front-end interview test. Your task is to create a single month calendar application using React.
-
-## Task Description
+## Description
 
 - **Environment**: You have the flexibility to choose your development environment.
   - Use [codesandbox.io](https://codesandbox.io/)
